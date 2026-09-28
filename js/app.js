@@ -112,18 +112,18 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderMarkdown(text) {
         let rawHtml = marked.parse(text);
         
-        // Wrap code blocks with copy header
-        rawHtml = rawHtml.replace(/<pre><code class="([^"]*)">([\s\S]*?)<\/code><\/pre>/g, (match, lang, code) => {
-            const cleanLang = lang.replace('hljs language-', '') || 'code';
+        // Wrap code blocks with clean header and copy button
+        rawHtml = rawHtml.replace(/<pre><code(?:\s+class="([^"]*)")?>([\s\S]*?)<\/code><\/pre>/g, (match, lang, code) => {
+            const cleanLang = lang ? lang.replace('hljs language-', '').replace('language-', '') : 'code';
             return `
                 <div class="code-wrapper">
                     <div class="code-header">
-                        <span><i class="fa-solid fa-code"></i> ${cleanLang}</span>
+                        <span><i class="fa-solid fa-code"></i> ${cleanLang.toUpperCase()}</span>
                         <button class="copy-code-btn" onclick="copyToClipboard(this)">
                             <i class="fa-regular fa-copy"></i> Salin Kode
                         </button>
                     </div>
-                    <pre><code class="${lang}">${code}</code></pre>
+                    <pre><code class="${lang || 'hljs'}">${code}</code></pre>
                 </div>
             `;
         });

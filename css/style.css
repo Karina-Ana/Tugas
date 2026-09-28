@@ -775,8 +775,9 @@ body {
 }
 
 .ai-row .message-bubble pre {
-    background: var(--code-bg);
-    padding: 14px;
+    background: #0b0f19 !important;
+    color: #ffffff !important;
+    padding: 16px;
     border-radius: 8px;
     overflow-x: auto;
     margin: 12px 0;
@@ -785,41 +786,99 @@ body {
 }
 
 .ai-row .message-bubble pre code {
-    background: transparent;
+    background: transparent !important;
     padding: 0;
-    color: inherit;
+    color: #ffffff !important;
 }
 
-/* Code Copy Header */
+/* Code Copy Header & High-Contrast Code Blocks */
+.code-wrapper {
+    margin: 16px 0;
+    border: 2px solid var(--text-primary);
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    background: #0b0f19 !important;
+}
+
 .code-header {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    background: #000000;
-    color: #ffffff;
-    padding: 6px 12px;
-    border-top-left-radius: 8px;
-    border-top-right-radius: 8px;
-    font-size: 0.75rem;
+    background: #1e293b !important;
+    color: #ffffff !important;
+    padding: 8px 14px;
+    font-size: 0.8rem;
     font-family: 'Fira Code', monospace;
-    font-weight: 600;
+    font-weight: 800;
+    border-bottom: 2px solid #334155 !important;
 }
 
 .copy-code-btn {
-    background: transparent;
-    border: none;
-    color: #ffffff;
+    background: #334155 !important;
+    border: 1px solid #475569 !important;
+    color: #ffffff !important;
     cursor: pointer;
     font-size: 0.75rem;
+    padding: 4px 10px;
+    border-radius: 6px;
     display: flex;
     align-items: center;
-    gap: 4px;
-    font-weight: 700;
+    gap: 5px;
+    font-weight: 800;
+    transition: all 0.15s ease;
 }
 
 .copy-code-btn:hover {
-    color: var(--accent-secondary);
+    background: var(--accent-primary) !important;
+    color: #ffffff !important;
 }
+
+/* High Specificity Rule for Code Text - Always White */
+.ai-row .message-bubble pre,
+.ai-row .message-bubble pre code,
+.ai-row .message-bubble pre code *,
+.ai-row .message-bubble code.hljs,
+.ai-row .message-bubble pre .hljs-subst,
+.ai-row .message-bubble pre .hljs-operator,
+.ai-row .message-bubble pre .hljs-punctuation,
+.ai-row .message-bubble pre .hljs-property,
+.ai-row .message-bubble pre .hljs-variable {
+    color: #ffffff !important;
+    background: transparent !important;
+    font-family: 'Fira Code', monospace !important;
+    font-size: 0.88rem !important;
+    line-height: 1.6 !important;
+}
+
+.ai-row .message-bubble pre {
+    background-color: #0b0f19 !important;
+    padding: 16px !important;
+    margin: 0 !important;
+    border: none !important;
+    border-radius: 0 0 8px 8px !important;
+    overflow-x: auto !important;
+}
+
+/* Syntax Highlighting High-Contrast Accent Tokens */
+.ai-row .message-bubble pre .hljs-keyword, 
+.ai-row .message-bubble pre .hljs-selector-tag { color: #f472b6 !important; font-weight: 700; } /* Bright Pink */
+
+.ai-row .message-bubble pre .hljs-string, 
+.ai-row .message-bubble pre .hljs-title, 
+.ai-row .message-bubble pre .hljs-section, 
+.ai-row .message-bubble pre .hljs-attribute, 
+.ai-row .message-bubble pre .hljs-literal { color: #34d399 !important; } /* Bright Mint Green */
+
+.ai-row .message-bubble pre .hljs-comment, 
+.ai-row .message-bubble pre .hljs-quote, 
+.ai-row .message-bubble pre .hljs-meta { color: #94a3b8 !important; font-style: italic; } /* Muted Slate */
+
+.ai-row .message-bubble pre .hljs-number, 
+.ai-row .message-bubble pre .hljs-regexp { color: #fbbf24 !important; } /* Bright Gold */
+
+.ai-row .message-bubble pre .hljs-function, 
+.ai-row .message-bubble pre .hljs-title.function_ { color: #60a5fa !important; font-weight: 700; } /* Bright Blue */
 
 /* Message Actions Toolbar */
 .message-actions {
