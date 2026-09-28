@@ -1,0 +1,306 @@
+<!DOCTYPE html>
+<html lang="id" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyMate AI — Chatbot Edukasi & Asisten Belajar Mahasiswa</title>
+    <meta name="description" content="StudyMate AI adalah chatbot berbasis AI yang dirancang untuk membantu mahasiswa memahami materi perkuliahan dengan bahasa yang sederhana, ramah, dan interaktif.">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- FontAwesome for Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Marked.js for Markdown Rendering -->
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    
+    <!-- Highlight.js for Syntax Highlighting -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" id="hljs-theme">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+
+    <!-- KaTeX for Math Formulas -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <div class="app-container">
+        <!-- Sidebar Navigation & Chat Sessions -->
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="brand">
+                    <div class="brand-icon">
+                        <i class="fa-solid fa-graduation-cap"></i>
+                    </div>
+                    <div class="brand-text">
+                        <h2>StudyMate <span>AI</span></h2>
+                        <span class="badge">HACKTIVS</span>
+                    </div>
+                </div>
+                <button class="icon-btn close-sidebar-btn" id="closeSidebarBtn" title="Tutup Sidebar">
+                    <i class="fa-solid fa-xmark"></i>
+                </button>
+            </div>
+
+            <button class="new-chat-btn" id="newChatBtn">
+                <i class="fa-solid fa-plus"></i>
+                <span>Percakapan Baru</span>
+            </button>
+
+            <!-- Subject Category Quick Selection -->
+            <div class="sidebar-section">
+                <div class="section-title">
+                    <i class="fa-solid fa-book-bookmark"></i>
+                    <span>Kategori Mata Kuliah</span>
+                </div>
+                <div class="subject-chips">
+                    <button class="chip active" data-subject="all">Semua</button>
+                    <button class="chip" data-subject="informatika"><i class="fa-solid fa-code"></i> Informatika</button>
+                    <button class="chip" data-subject="ekonomi"><i class="fa-solid fa-chart-line"></i> Ekonomi</button>
+                    <button class="chip" data-subject="teknik"><i class="fa-solid fa-gear"></i> Teknik</button>
+                    <button class="chip" data-subject="hukum"><i class="fa-solid fa-scale-balanced"></i> Hukum</button>
+                    <button class="chip" data-subject="kesehatan"><i class="fa-solid fa-user-doctor"></i> Kesehatan</button>
+                </div>
+            </div>
+
+            <!-- Chat History List -->
+            <div class="sidebar-section history-section">
+                <div class="section-title">
+                    <i class="fa-solid fa-clock-rotate-left"></i>
+                    <span>Riwayat Belajar</span>
+                </div>
+                <div class="history-list" id="historyList">
+                    <!-- Dynamic chat history items will be inserted here -->
+                </div>
+            </div>
+
+            <!-- Sidebar Footer & Controls -->
+            <div class="sidebar-footer">
+                <button class="sidebar-action-btn" id="openSettingsBtn">
+                    <i class="fa-solid fa-sliders"></i>
+                    <span>Parameter & AI Settings</span>
+                </button>
+                <button class="sidebar-action-btn" id="themeToggleBtn">
+                    <i class="fa-solid fa-moon" id="themeIcon"></i>
+                    <span id="themeLabel">Mode Gelap</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top App Header -->
+            <header class="top-header">
+                <div class="left-controls">
+                    <button class="icon-btn sidebar-toggle-btn" id="toggleSidebarBtn" title="Buka Sidebar">
+                        <i class="fa-solid fa-bars-staggered"></i>
+                    </button>
+                    <div class="header-info">
+                        <h1 class="header-title">StudyMate AI</h1>
+                        <p class="header-subtitle">Teman Belajar & Asisten Akademik Mahasiswa Interaktif</p>
+                    </div>
+                </div>
+
+                <div class="right-controls">
+                    <div class="status-indicator online" id="statusIndicator">
+                        <span class="dot"></span>
+                        <span class="status-text" id="statusText">AI Ready</span>
+                    </div>
+
+                    <button class="header-btn" id="exportChatBtn" title="Ekspor Percakapan">
+                        <i class="fa-solid fa-download"></i>
+                        <span class="btn-text">Ekspor</span>
+                    </button>
+
+                    <button class="header-btn danger" id="clearChatBtn" title="Hapus Percakapan Saat Ini">
+                        <i class="fa-solid fa-trash-can"></i>
+                        <span class="btn-text">Hapus Chat</span>
+                    </button>
+                </div>
+            </header>
+
+            <!-- Active Parameter Bar (Chips showing current AI persona) -->
+            <div class="active-params-bar" id="activeParamsBar">
+                <div class="param-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> Gaya: <strong id="currentToneLabel">Santai & Sederhana</strong></div>
+                <div class="param-badge"><i class="fa-solid fa-user-astronaut"></i> Peran: <strong id="currentRoleLabel">Asisten Belajar</strong></div>
+                <div class="param-badge"><i class="fa-solid fa-microchip"></i> Engine: <strong id="currentEngineLabel">Smart AI (Direct API)</strong></div>
+            </div>
+
+            <!-- Chat Scroll Area -->
+            <div class="chat-container" id="chatContainer">
+                <!-- Welcome View (Shown when conversation is empty) -->
+                <div class="welcome-view" id="welcomeView">
+                    <div class="welcome-avatar">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <h2>Halo Mahasiswa! 👋</h2>
+                    <p class="welcome-desc">
+                        Saya <strong>StudyMate AI</strong>, asisten belajar mahasiswa yang siap membantu kamu memahami konsep perkuliahan yang rumit menjadi mudah dan menyenangkan!
+                    </p>
+
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="card-icon"><i class="fa-solid fa-lightbulb"></i></div>
+                            <h3>Penjelasan Sederhana</h3>
+                            <p>Mengubah rumus atau teori kompleks menjadi analogi yang gampang dipahami.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="card-icon"><i class="fa-solid fa-code-compare"></i></div>
+                            <h3>Contoh Studi Kasus</h3>
+                            <p>Dilengkapi contoh nyata, snippet kode, dan penerapan praktis di perkuliahan.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="card-icon"><i class="fa-solid fa-comments"></i></div>
+                            <h3>Diskusi Interaktif</h3>
+                            <p>Bisa diajak tanya jawab lanjutan hingga kamu benar-benar paham 100%.</p>
+                        </div>
+                    </div>
+
+                    <div class="sample-prompts-section">
+                        <h4><i class="fa-solid fa-fire"></i> Rekomendasi Pertanyaan Sering Diajukan:</h4>
+                        <div class="sample-prompts-grid" id="samplePromptsGrid">
+                            <!-- Populated dynamically via JS -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Active Chat Messages Stream -->
+                <div class="messages-list" id="messagesList"></div>
+
+                <!-- Typing / Loading Indicator -->
+                <div class="typing-indicator hidden" id="typingIndicator">
+                    <div class="ai-avatar-small">
+                        <i class="fa-solid fa-robot"></i>
+                    </div>
+                    <div class="typing-dots">
+                        <span></span>
+                        <span></span>
+                        <span></span>
+                    </div>
+                    <span class="typing-text">StudyMate AI sedang berpikir & menyusun penjelasan...</span>
+                </div>
+            </div>
+
+            <!-- Follow-up Prompt Suggestions Chips -->
+            <div class="suggestions-container hidden" id="suggestionsContainer">
+                <span class="suggestion-title"><i class="fa-solid fa-wand-magic"></i> Pertanyaan Lanjutan:</span>
+                <div class="suggestion-chips" id="suggestionChips"></div>
+            </div>
+
+            <!-- Bottom Chat Input Bar -->
+            <div class="chat-input-wrapper">
+                <form class="chat-input-form" id="chatForm">
+                    <div class="input-actions-left">
+                        <button type="button" class="icon-input-btn" id="voiceInputBtn" title="Input Suara (Speech to Text)">
+                            <i class="fa-solid fa-microphone" id="micIcon"></i>
+                        </button>
+                    </div>
+
+                    <textarea 
+                        id="userPrompt" 
+                        class="chat-textarea" 
+                        placeholder="Tanyakan materi perkuliahan... (Contoh: Apa itu algoritma K-Means?)" 
+                        rows="1"
+                        required></textarea>
+
+                    <div class="input-actions-right">
+                        <button type="submit" class="send-btn" id="sendBtn" title="Kirim Pertanyaan">
+                            <i class="fa-solid fa-paper-plane"></i>
+                        </button>
+                    </div>
+                </form>
+                <div class="input-footer-note">
+                    StudyMate AI dirancang khusus untuk HACKTIVS Final Project • Gunakan Shift+Enter untuk baris baru
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Parameter & AI Configuration Settings Drawer Modal -->
+    <div class="modal-overlay hidden" id="settingsModal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3><i class="fa-solid fa-sliders"></i> Konfigurasi Parameter StudyMate AI</h3>
+                <button class="icon-btn" id="closeSettingsBtn"><i class="fa-solid fa-xmark"></i></button>
+            </div>
+            <div class="modal-body">
+                <p class="modal-intro">
+                    Sesuaikan parameter respons AI agar cocok dengan kebutuhan gaya belajar dan mata kuliah kamu.
+                </p>
+
+                <!-- Parameter 1: Gaya Bahasa -->
+                <div class="form-group">
+                    <label for="toneSelect"><i class="fa-solid fa-comment-dots"></i> Gaya Bahasa (Tone of Voice)</label>
+                    <select id="toneSelect" class="form-select">
+                        <option value="santai" selected>Santai, Ramah & Sederhana (Default Mahasiswa)</option>
+                        <option value="formal">Formal & Akademis (Gaya Jurnal/Tesis)</option>
+                        <option value="analogi">Gaya Analogi & Cerita Kasus</option>
+                        <option value="ringkas">Ringkas, Poin-poin & To The Point</option>
+                    </select>
+                </div>
+
+                <!-- Parameter 2: Peran AI -->
+                <div class="form-group">
+                    <label for="roleSelect"><i class="fa-solid fa-user-graduate"></i> Peran AI (Persona)</label>
+                    <select id="roleSelect" class="form-select">
+                        <option value="tutor" selected>Teman Belajar / Senior Kampus Ramah</option>
+                        <option value="dosen">Dosen Pembimbing Akademik</option>
+                        <option value="quizmaster">Penguji / Quiz Master (Tanya-Jawab Evaluasi)</option>
+                        <option value="coder">Coding Mentor & Software Engineer</option>
+                    </select>
+                </div>
+
+                <!-- Parameter 3: Detail Penjelasan -->
+                <div class="form-group">
+                    <label for="detailSelect"><i class="fa-solid fa-align-left"></i> Panjang & Kedalaman Response</label>
+                    <select id="detailSelect" class="form-select">
+                        <option value="komprehensif" selected>Komprehensif (Penjelasan + Contoh Kasus + Kesimpulan)</option>
+                        <option value="sedang">Standar (Penjelasan Ringkas & Contoh)</option>
+                        <option value="singkat">Singkat & Cepat</option>
+                    </select>
+                </div>
+
+                <!-- Parameter 4: System Prompt Preview / Customizer -->
+                <div class="form-group">
+                    <label for="systemPromptText"><i class="fa-solid fa-terminal"></i> Instruksi Sistem Custom (System Prompt)</label>
+                    <textarea id="systemPromptText" class="form-textarea" rows="3" placeholder="Instruksi sistem khusus..."></textarea>
+                </div>
+
+                <!-- Parameter 5: API Key & Engine Selection -->
+                <div class="form-group border-top">
+                    <label for="apiProviderSelect"><i class="fa-solid fa-key"></i> Provider Model AI</label>
+                    <select id="apiProviderSelect" class="form-select">
+                        <option value="gemini">Google Gemini API (Gemini 1.5 Flash/Pro)</option>
+                        <option value="openrouter">OpenRouter API (Access DeepSeek, Claude, Llama)</option>
+                        <option value="built_in" selected>Built-in Smart Study Engine (Gratis / Standalone Demo)</option>
+                    </select>
+                </div>
+
+                <div class="form-group hidden" id="apiKeyContainer">
+                    <label for="apiKeyInput"><i class="fa-solid fa-lock"></i> API Key</label>
+                    <input type="password" id="apiKeyInput" class="form-input" placeholder="Masukkan API Key (Tersimpan aman di browser local storage)">
+                    <small class="form-hint">Kunci API disimpan hanya secara lokal di browser kamu dan tidak pernah dikirim ke server pihak ketiga.</small>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn secondary" id="resetParamsBtn">Reset Default</button>
+                <button type="button" class="btn primary" id="saveParamsBtn">Simpan Konfigurasi</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Custom Toast Notification -->
+    <div class="toast-container" id="toastContainer"></div>
+
+    <!-- Custom JS Scripts -->
+    <script src="js/config.js"></script>
+    <script src="js/ai-service.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
