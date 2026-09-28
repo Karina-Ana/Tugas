@@ -1,19 +1,9 @@
-/* ==========================================================================
-   StudyMate AI — AI Service & API Integration Layer
-   Supports: Google Gemini API, OpenRouter API, and Built-in Educational AI Engine
-   ========================================================================== */
-
+// buat ngolah pertanyaan & manggil ai
 class AIService {
     constructor() {
         this.knowledgeBase = this.initKnowledgeBase();
     }
 
-    /**
-     * Generate response from AI based on current parameters and user query
-     * @param {Array} history - Array of {role, content} conversation history
-     * @param {Object} params - User parameters (tone, role, detail, provider, apiKey, etc.)
-     * @returns {Promise<string>} AI response text
-     */
     async generateResponse(history, params) {
         const provider = params.apiProvider || 'built_in';
 
@@ -22,20 +12,16 @@ class AIService {
         } else if (provider === 'openrouter' && params.apiKey) {
             return await this.callOpenRouterAPI(history, params);
         } else {
-            // Built-in Smart Educational AI Engine
             return await this.generateBuiltInResponse(history, params);
         }
     }
 
-    /**
-     * Call Google Gemini API
-     */
+    // buat manggil gemini api
     async callGeminiAPI(history, params) {
         const apiKey = params.apiKey.trim();
         const systemInstruction = this.buildSystemInstruction(params);
         const endpoint = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
 
-        // Transform history to Gemini format
         const contents = history.map(msg => ({
             role: msg.role === 'user' ? 'user' : 'model',
             parts: [{ text: msg.content }]
@@ -69,14 +55,12 @@ class AIService {
             if (!text) throw new Error('Respon dari Gemini kosong.');
             return text;
         } catch (err) {
-            console.warn('Gemini API call failed, falling back to Built-in Engine:', err);
-            throw new Error(`Gagal menghubungkan ke Gemini API: ${err.message}`);
+            console.warn('Gemini API error, pake engine bawaan:', err);
+            throw new Error(`Gagal hubungin Gemini API: ${err.message}`);
         }
     }
 
-    /**
-     * Call OpenRouter API
-     */
+    // buat manggil openrouter api
     async callOpenRouterAPI(history, params) {
         const apiKey = params.apiKey.trim();
         const systemInstruction = this.buildSystemInstruction(params);
@@ -105,17 +89,15 @@ class AIService {
                 })
             });
 
-            if (!response.ok) throw new Error(`OpenRouter HTTP error! status: ${response.status}`);
+            if (!response.ok) throw new Error(`OpenRouter error status: ${response.status}`);
             const data = await response.json();
-            return data.choices?.[0]?.message?.content || 'Tidak ada respon.';
+            return data.choices?.[0]?.message?.content || 'Gak ada respon.';
         } catch (err) {
-            throw new Error(`Gagal me-reach OpenRouter API: ${err.message}`);
+            throw new Error(`Gagal hubungin OpenRouter: ${err.message}`);
         }
     }
 
-    /**
-     * Build system instruction based on parameters
-     */
+    // rakit instruksi sistem bot
     buildSystemInstruction(params) {
         let sys = CONFIG.systemPrompts.base + '\n\n';
         sys += CONFIG.systemPrompts.toneModifiers[params.tone || 'santai'] + '\n';
@@ -126,12 +108,8 @@ class AIService {
         return sys;
     }
 
-    /**
-     * Built-in Smart Educational AI Engine
-     * Simulates intelligent, tailored educational responses based on subject context & query
-     */
+    // engine ai lokal kalau offline
     async generateBuiltInResponse(history, params) {
-        // Simulate thinking latency (800ms - 1500ms)
         await new Promise(r => setTimeout(r, 900 + Math.random() * 600));
 
         const lastUserMessage = history[history.length - 1]?.content || '';
@@ -139,18 +117,15 @@ class AIService {
         const tone = params.tone || 'santai';
         const role = params.role || 'tutor';
 
-        // Check Knowledge Base Match
         let content = '';
         const match = this.knowledgeBase.find(item => item.keywords.some(kw => lowerQuery.includes(kw)));
 
         if (match) {
             content = match.getResponse(tone, role, lowerQuery);
         } else {
-            // General Student Helper Generator
             content = this.generateGeneralResponse(lastUserMessage, tone, role);
         }
 
-        // Quizmaster Role Addon
         if (role === 'quizmaster') {
             content += `\n\n---\n🎯 **Kuis Singkat Pemahaman:**\nBerdasarkan penjelasan di atas, menurut kamu apa hal paling krusial yang membedakan konsep ini? Cobalah jawab di chat bawah ini!`;
         }
@@ -158,9 +133,7 @@ class AIService {
         return content;
     }
 
-    /**
-     * General academic response synthesizer for arbitrary student queries
-     */
+    // jawaban umum
     generateGeneralResponse(query, tone, role) {
         if (tone === 'formal') {
             return `### Analisis dan Penjelasan Konsep: "${query}"
@@ -208,7 +181,6 @@ Gimana, analoginya bikin lebih bayang kan? Ada bagian yang masih bikin penasaran
 *Tanyakan jika ingin penjelasan kode atau rumus lengkapnya!*`;
         }
 
-        // Default: Santai & Sederhana
         return `Halo! Pertanyaan yang menarik banget nih mengenai **"${query}"**! 🎓
 
 Mari kita bedah bareng-bareng secara sederhana ya:
@@ -227,9 +199,7 @@ Mirip seperti saat kamu menyusun jadwal belajar H-1 ujian — kamu bakal memprio
 Gimana, paham kan? Mau kita coba bahas contoh soal atau kasus lanjutannya? 😊`;
     }
 
-    /**
-     * Pre-populated rich knowledge base for educational queries
-     */
+    // data materi perkuliahan
     initKnowledgeBase() {
         return [
             {

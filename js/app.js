@@ -1,9 +1,5 @@
-/* ==========================================================================
-   StudyMate AI — Core Application Logic & State Controller
-   ========================================================================== */
-
+// variabel state & dom
 document.addEventListener('DOMContentLoaded', () => {
-    // --- Application State ---
     const state = {
         conversations: JSON.parse(localStorage.getItem('studymate_chats')) || [],
         currentChatId: null,
@@ -17,7 +13,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const aiService = new AIService();
 
-    // --- DOM Elements ---
     const elements = {
         sidebar: document.getElementById('sidebar'),
         toggleSidebarBtn: document.getElementById('toggleSidebarBtn'),
@@ -28,7 +23,6 @@ document.addEventListener('DOMContentLoaded', () => {
         themeIcon: document.getElementById('themeIcon'),
         themeLabel: document.getElementById('themeLabel'),
         
-        // Settings Modal
         openSettingsBtn: document.getElementById('openSettingsBtn'),
         closeSettingsBtn: document.getElementById('closeSettingsBtn'),
         settingsModal: document.getElementById('settingsModal'),
@@ -42,12 +36,10 @@ document.addEventListener('DOMContentLoaded', () => {
         apiKeyInput: document.getElementById('apiKeyInput'),
         systemPromptText: document.getElementById('systemPromptText'),
         
-        // Active Params Bar
         currentToneLabel: document.getElementById('currentToneLabel'),
         currentRoleLabel: document.getElementById('currentRoleLabel'),
         currentEngineLabel: document.getElementById('currentEngineLabel'),
 
-        // Chat Container
         welcomeView: document.getElementById('welcomeView'),
         messagesList: document.getElementById('messagesList'),
         chatContainer: document.getElementById('chatContainer'),
@@ -56,24 +48,20 @@ document.addEventListener('DOMContentLoaded', () => {
         suggestionsContainer: document.getElementById('suggestionsContainer'),
         suggestionChips: document.getElementById('suggestionChips'),
 
-        // Input Form & Actions
         chatForm: document.getElementById('chatForm'),
         userPrompt: document.getElementById('userPrompt'),
         sendBtn: document.getElementById('sendBtn'),
         voiceInputBtn: document.getElementById('voiceInputBtn'),
         micIcon: document.getElementById('micIcon'),
 
-        // Top Actions
         clearChatBtn: document.getElementById('clearChatBtn'),
         exportChatBtn: document.getElementById('exportChatBtn'),
         statusIndicator: document.getElementById('statusIndicator'),
         statusText: document.getElementById('statusText'),
 
-        // Toast
         toastContainer: document.getElementById('toastContainer')
     };
 
-    // --- Initialization ---
     init();
 
     function init() {
@@ -94,9 +82,7 @@ document.addEventListener('DOMContentLoaded', () => {
         bindEvents();
     }
 
-    /* ==========================================================================
-       1. Marked.js & Formatting Setup
-       ========================================================================== */
+    // urus markdown & matematika
     function initMarkedConfig() {
         marked.setOptions({
             highlight: function(code, lang) {
@@ -112,7 +98,6 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderMarkdown(text) {
         let rawHtml = marked.parse(text);
         
-        // Wrap code blocks with clean header and copy button
         rawHtml = rawHtml.replace(/<pre><code(?:\s+class="([^"]*)")?>([\s\S]*?)<\/code><\/pre>/g, (match, lang, code) => {
             const cleanLang = lang ? lang.replace('hljs language-', '').replace('language-', '') : 'code';
             return `
@@ -145,23 +130,18 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    /* ==========================================================================
-       2. Event Binders
-       ========================================================================== */
+    // event tombol & form
     function bindEvents() {
-        // Sidebar Toggles
         elements.toggleSidebarBtn.addEventListener('click', () => elements.sidebar.classList.add('open'));
         elements.closeSidebarBtn.addEventListener('click', () => elements.sidebar.classList.remove('open'));
         elements.newChatBtn.addEventListener('click', () => createNewChat());
 
-        // Theme Toggle
         elements.themeToggleBtn.addEventListener('click', () => {
             state.theme = state.theme === 'dark' ? 'light' : 'dark';
             localStorage.setItem('studymate_theme', state.theme);
             applyTheme(state.theme);
         });
 
-        // Chat Submission
         elements.chatForm.addEventListener('submit', (e) => {
             e.preventDefault();
             handleUserSubmit();
@@ -174,20 +154,16 @@ document.addEventListener('DOMContentLoaded', () => {
             }
         });
 
-        // Auto-resize Textarea
         elements.userPrompt.addEventListener('input', () => {
             elements.userPrompt.style.height = 'auto';
             elements.userPrompt.style.height = `${Math.min(elements.userPrompt.scrollHeight, 150)}px`;
         });
 
-        // Speech Input
         elements.voiceInputBtn.addEventListener('click', toggleVoiceInput);
 
-        // Top Actions
         elements.clearChatBtn.addEventListener('click', handleClearChat);
         elements.exportChatBtn.addEventListener('click', handleExportChat);
 
-        // Settings Modal
         elements.openSettingsBtn.addEventListener('click', () => {
             syncParamUI();
             elements.settingsModal.classList.remove('hidden');
@@ -206,7 +182,6 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.saveParamsBtn.addEventListener('click', saveParamsFromUI);
         elements.resetParamsBtn.addEventListener('click', resetParamsToDefault);
 
-        // Category Subject Filter Chips
         document.querySelectorAll('.subject-chips .chip').forEach(chip => {
             chip.addEventListener('click', (e) => {
                 document.querySelectorAll('.subject-chips .chip').forEach(c => c.classList.remove('active'));
@@ -218,9 +193,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /* ==========================================================================
-       3. State & Conversation Logic
-       ========================================================================== */
+    // kelola riwayat chat
     function createNewChat() {
         const newChat = {
             id: 'chat_' + Date.now(),
@@ -232,7 +205,7 @@ document.addEventListener('DOMContentLoaded', () => {
         saveState();
         loadConversation(newChat.id);
         renderHistoryList();
-        showToast('Percakapan baru telah dibuat!');
+        showToast('Percakapan baru dibuat!');
     }
 
     function loadConversation(chatId) {
@@ -263,9 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
         localStorage.setItem('studymate_params', JSON.stringify(state.params));
     }
 
-    /* ==========================================================================
-       4. Chat Execution & Stream Response Simulation
-       ========================================================================== */
+    // kirim pesan & balesan bot
     async function handleUserSubmit() {
         const promptText = elements.userPrompt.value.trim();
         if (!promptText || state.isProcessing) return;
@@ -276,46 +247,38 @@ document.addEventListener('DOMContentLoaded', () => {
             currentChat = getCurrentConversation();
         }
 
-        // Reset Textarea
         elements.userPrompt.value = '';
         elements.userPrompt.style.height = 'auto';
 
-        // Auto-set title if first message
         if (currentChat.messages.length === 0) {
             currentChat.title = promptText.length > 28 ? promptText.substring(0, 28) + '...' : promptText;
             renderHistoryList();
         }
 
-        // Hide welcome view
         elements.welcomeView.classList.add('hidden');
         elements.suggestionsContainer.classList.add('hidden');
 
-        // Add user message
         const userMsg = { role: 'user', content: promptText };
         currentChat.messages.push(userMsg);
         appendMessageUI('user', promptText, true);
         saveState();
 
-        // Show Loading Status
         state.isProcessing = true;
         setProcessingStatus(true);
 
         try {
-            // Call AI Service
             const aiResponseText = await aiService.generateResponse(currentChat.messages, state.params);
             
-            // Add AI response to state
             const aiMsg = { role: 'assistant', content: aiResponseText };
             currentChat.messages.push(aiMsg);
             saveState();
 
-            // Render AI Message with Typing Animation
             await appendAiMessageAnimated(aiResponseText);
             renderFollowUpSuggestions(aiResponseText);
 
         } catch (err) {
             showToast(`Error: ${err.message}`, 'error');
-            appendMessageUI('assistant', `⚠️ **Maaf, terjadi masalah:** ${err.message}\n\nSilakan periksa kembali konfigurasi API Key atau coba ganti provider di menu *Parameter Settings*.`);
+            appendMessageUI('assistant', `⚠️ **Ada masalah:** ${err.message}`);
         } finally {
             state.isProcessing = false;
             setProcessingStatus(false);
@@ -343,7 +306,6 @@ document.addEventListener('DOMContentLoaded', () => {
             renderKaTeXMath(bubble);
         }
 
-        // Message Actions Bar (Copy / Speak)
         const actions = document.createElement('div');
         actions.className = 'message-actions';
         
@@ -352,7 +314,7 @@ document.addEventListener('DOMContentLoaded', () => {
         copyBtn.innerHTML = '<i class="fa-regular fa-copy"></i> Salin';
         copyBtn.onclick = () => {
             navigator.clipboard.writeText(content);
-            showToast('Teks pesan berhasil disalin!');
+            showToast('Teks berhasil disalin!');
         };
         actions.appendChild(copyBtn);
 
@@ -394,7 +356,6 @@ document.addEventListener('DOMContentLoaded', () => {
 
         elements.messagesList.appendChild(row);
 
-        // Streaming typing simulation
         const chunkSize = 8;
         for (let i = 0; i <= fullContent.length; i += chunkSize) {
             const currentChunk = fullContent.substring(0, i);
@@ -403,11 +364,9 @@ document.addEventListener('DOMContentLoaded', () => {
             await new Promise(r => setTimeout(r, 15));
         }
 
-        // Final full render with KaTeX math rendering
         bubble.innerHTML = renderMarkdown(fullContent);
         renderKaTeXMath(bubble);
 
-        // Append actions
         const actions = document.createElement('div');
         actions.className = 'message-actions';
         actions.innerHTML = `
@@ -423,9 +382,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.chatContainer.scrollTop = elements.chatContainer.scrollHeight;
     }
 
-    /* ==========================================================================
-       5. Follow-up Suggestions Generator
-       ========================================================================== */
+    // rekomendasi pertanyaan
     function renderFollowUpSuggestions(lastAiMessage) {
         elements.suggestionChips.innerHTML = '';
         const lower = lastAiMessage.toLowerCase();
@@ -451,9 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
         elements.suggestionsContainer.classList.remove('hidden');
     }
 
-    /* ==========================================================================
-       6. UI Rendering & Sample Prompts
-       ========================================================================== */
+    // sampel pertanyaan
     function populateSamplePrompts() {
         elements.samplePromptsGrid.innerHTML = '';
         const filtered = state.activeSubject === 'all' 
@@ -478,9 +433,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    function renderSubjectChips() {
-        // Keep category chips updated
-    }
+    function renderSubjectChips() {}
 
     function renderHistoryList() {
         elements.historyList.innerHTML = '';
@@ -534,19 +487,19 @@ document.addEventListener('DOMContentLoaded', () => {
         const currentChat = getCurrentConversation();
         if (!currentChat || currentChat.messages.length === 0) return;
 
-        if (confirm('Apakah Anda yakin ingin menghapus seluruh pesan pada percakapan ini?')) {
+        if (confirm('Yakin mau hapus semua pesan di chat ini?')) {
             currentChat.messages = [];
             currentChat.title = 'Percakapan Baru';
             saveState();
             loadConversation(currentChat.id);
-            showToast('Percakapan telah dibersihkan!');
+            showToast('Chat udah dibersihin!');
         }
     }
 
     function handleExportChat() {
         const currentChat = getCurrentConversation();
         if (!currentChat || currentChat.messages.length === 0) {
-            showToast('Tidak ada percakapan untuk diekspor!', 'warning');
+            showToast('Belum ada chat buat diekspor!', 'warning');
             return;
         }
 
@@ -565,12 +518,10 @@ document.addEventListener('DOMContentLoaded', () => {
         a.download = `StudyMate_AI_${currentChat.title.replace(/[^a-zA-Z0-9]/g, '_')}.md`;
         a.click();
         URL.revokeObjectURL(url);
-        showToast('Percakapan berhasil diekspor ke format Markdown!');
+        showToast('Chat berhasil diekspor ke Markdown!');
     }
 
-    /* ==========================================================================
-       7. Parameter Settings Sync
-       ========================================================================== */
+    // simpan parameter setting
     function syncParamUI() {
         elements.toneSelect.value = state.params.tone || 'santai';
         elements.roleSelect.value = state.params.role || 'tutor';
@@ -585,7 +536,6 @@ document.addEventListener('DOMContentLoaded', () => {
             elements.apiKeyContainer.classList.remove('hidden');
         }
 
-        // Update Labels in Active Params Header Bar
         const toneTextMap = {
             santai: 'Santai & Sederhana',
             formal: 'Formal & Akademis',
@@ -622,19 +572,17 @@ document.addEventListener('DOMContentLoaded', () => {
         saveState();
         syncParamUI();
         elements.settingsModal.classList.add('hidden');
-        showToast('Konfigurasi parameter StudyMate AI telah diperbarui!');
+        showToast('Pengaturan bot udah disimpan!');
     }
 
     function resetParamsToDefault() {
         state.params = { ...CONFIG.defaultParams };
         saveState();
         syncParamUI();
-        showToast('Parameter dikembalikan ke standar default.');
+        showToast('Pengaturan balik ke standar.');
     }
 
-    /* ==========================================================================
-       8. Speech Recognition & Synthesis
-       ========================================================================== */
+    // suara & tema
     function initSpeechRecognition() {
         const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
         if (!SpeechRecognition) {
@@ -649,7 +597,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state.recognition.onstart = () => {
             state.isListening = true;
             elements.voiceInputBtn.classList.add('listening');
-            showToast('Mendengarkan suara... Bicara sekarang.');
+            showToast('Lagi dengerin suara... Ngomong aja.');
         };
 
         state.recognition.onresult = (e) => {
@@ -666,7 +614,7 @@ document.addEventListener('DOMContentLoaded', () => {
         state.recognition.onerror = () => {
             state.isListening = false;
             elements.voiceInputBtn.classList.remove('listening');
-            showToast('Gagal mengenali suara.', 'error');
+            showToast('Gagal ngenalin suara.', 'error');
         };
     }
 
@@ -683,18 +631,14 @@ document.addEventListener('DOMContentLoaded', () => {
         if (!('speechSynthesis' in window)) return;
         window.speechSynthesis.cancel();
         
-        // Strip markdown code blocks and HTML tags for speech
         const cleanText = text.replace(/```[\s\S]*?```/g, 'Kode program terlampir.').replace(/<[^>]*>/g, '');
         const utterance = new SpeechSynthesisUtterance(cleanText);
         utterance.lang = 'id-ID';
         utterance.rate = 1.0;
         window.speechSynthesis.speak(utterance);
-        showToast('Memutar suara penjelasan...');
+        showToast('Lagi nemenin baca suara...');
     };
 
-    /* ==========================================================================
-       9. Helpers & Theme
-       ========================================================================== */
     function applyTheme(theme) {
         document.documentElement.setAttribute('data-theme', theme);
         if (theme === 'dark') {
@@ -709,7 +653,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function setProcessingStatus(isBusy) {
         if (isBusy) {
             elements.statusIndicator.classList.add('busy');
-            elements.statusText.textContent = 'AI Menyusun Respon...';
+            elements.statusText.textContent = 'AI Lagi Mikir...';
             elements.typingIndicator.classList.remove('hidden');
             elements.sendBtn.disabled = true;
         } else {
@@ -734,7 +678,7 @@ document.addEventListener('DOMContentLoaded', () => {
     window.copyToClipboard = function(btn) {
         const pre = btn.closest('.code-wrapper').querySelector('pre code');
         navigator.clipboard.writeText(pre.textContent);
-        btn.innerHTML = '<i class="fa-solid fa-check"></i> Tersalin!';
+        btn.innerHTML = '<i class="fa-solid fa-check"></i> Kebagi/Disalin!';
         setTimeout(() => btn.innerHTML = '<i class="fa-regular fa-copy"></i> Salin Kode', 2000);
     };
 });

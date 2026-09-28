@@ -1,23 +1,19 @@
-/* ==========================================================================
-   StudyMate AI — Configuration & Prompt Parameters Engine
-   ========================================================================== */
-
+// data pengaturan dasar bot
 const CONFIG = {
     appName: 'StudyMate AI',
     version: '1.0.0',
     hacktivsTheme: 'Pendidikan dan Pembelajaran',
     
-    // Default AI System Parameters
     defaultParams: {
-        tone: 'santai',       // 'santai', 'formal', 'analogi', 'ringkas'
-        role: 'tutor',        // 'tutor', 'dosen', 'quizmaster', 'coder'
-        detail: 'komprehensif',// 'komprehensif', 'sedang', 'singkat'
-        apiProvider: 'built_in', // 'built_in', 'gemini', 'openrouter'
+        tone: 'santai',
+        role: 'tutor',
+        detail: 'komprehensif',
+        apiProvider: 'built_in',
         apiKey: '',
         customSystemPrompt: ''
     },
 
-    // Dynamic Tone System Prompts
+    // instruksi role & gaya bicara bot
     systemPrompts: {
         base: `Kamu adalah **StudyMate AI**, chatbot edukasi dan asisten belajar mahasiswa yang cerdas, ramah, dan solutif.
 Tugas utamamu adalah membantu mahasiswa memahami materi perkuliahan, algoritma, teori akademik, studi kasus, dan persiapan ujian.
@@ -38,7 +34,7 @@ Selalu jawab dalam **Bahasa Indonesia**. Gunakan format Markdown yang rapi (guna
         }
     },
 
-    // Sample Prompts for Instant Exploration (Categorized by Subject)
+    // contoh pertanyaan siap klik
     samplePrompts: [
         {
             subject: 'informatika',
@@ -91,7 +87,7 @@ Selalu jawab dalam **Bahasa Indonesia**. Gunakan format Markdown yang rapi (guna
         }
     ],
 
-    // Suggested Follow-up Prompts Generator Dictionary
+    // rekomendasi pertanyaan lanjutan
     followUpSuggestions: {
         default: [
             'Bisa berikan contoh studi kasus sederhana?',

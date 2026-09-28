@@ -1,11 +1,5 @@
-/* ==========================================================================
-   StudyMate AI — Redesigned Flat Academic Editorial Theme
-   Zero Gradients • High-Contrast Flat Design • Distinctive Non-Generic Palette
-   ========================================================================== */
-
-/* --- CSS Variables & Solid Color Tokens --- */
+/* style dasar & variabel warna */
 :root[data-theme="dark"] {
-    /* Base Dark Surfaces (Deep Charcoal & Soft Ink) */
     --bg-primary: #12161f;
     --bg-secondary: #1a202c;
     --bg-tertiary: #27303f;
@@ -17,21 +11,19 @@
     --text-secondary: #cbd5e1;
     --text-muted: #8092a7;
     
-    /* Solid Brand & Action Colors (No Gradients!) */
-    --accent-primary: #0d9488;         /* Solid Deep Teal */
+    --accent-primary: #0d9488;
     --accent-primary-hover: #0f766e;
-    --accent-secondary: #d97706;       /* Solid Warm Amber */
-    --accent-danger: #e11d48;          /* Solid Coral Crimson */
+    --accent-secondary: #d97706;
+    --accent-danger: #e11d48;
     
-    --user-msg-bg: #0f766e;            /* Solid Deep Teal User Bubble */
+    --user-msg-bg: #0f766e;
     --user-msg-text: #ffffff;
-    --ai-msg-bg: #1f2736;              /* Solid Flat Slate Card */
+    --ai-msg-bg: #1f2736;
     --ai-msg-border: #334155;
     
     --border-color: #2e3b4e;
     --border-highlight: #0d9488;
     
-    /* Tactile Solid Shadow (No Blurs!) */
     --shadow-sm: 2px 2px 0px #000000;
     --shadow-md: 4px 4px 0px #000000;
     --shadow-lg: 6px 6px 0px #000000;
@@ -40,33 +32,30 @@
 }
 
 :root[data-theme="light"] {
-    /* Base Light Surfaces (Warm Cream Paper & Crisp Ivory) */
-    --bg-primary: #fbf9f4;            /* Soft Cream Warm Parchment */
-    --bg-secondary: #f3efe6;          /* Warm Biscuit Sidebar */
+    --bg-primary: #fbf9f4;
+    --bg-secondary: #f3efe6;
     --bg-tertiary: #e7e0d3;
     --bg-glass: #fbf9f4;
     --bg-card: #ffffff;
     --bg-input: #ffffff;
     
-    --text-primary: #1c1917;          /* Deep Ink Black */
+    --text-primary: #1c1917;
     --text-secondary: #44403c;
     --text-muted: #78716c;
     
-    /* Solid Brand & Action Colors (No Gradients!) */
-    --accent-primary: #0284c7;         /* Solid Ocean Blue */
+    --accent-primary: #0284c7;
     --accent-primary-hover: #0369a1;
-    --accent-secondary: #d97706;       /* Solid Warm Amber */
-    --accent-danger: #dc2626;          /* Solid Crimson Red */
+    --accent-secondary: #d97706;
+    --accent-danger: #dc2626;
     
-    --user-msg-bg: #1e293b;            /* Solid Dark Ink User Bubble */
+    --user-msg-bg: #1e293b;
     --user-msg-text: #ffffff;
-    --ai-msg-bg: #ffffff;              /* Solid Cream Card */
+    --ai-msg-bg: #ffffff;
     --ai-msg-border: #1c1917;
     
     --border-color: #d6cebe;
     --border-highlight: #1c1917;
     
-    /* Tactile Solid Shadow (Flat Crisp Offset) */
     --shadow-sm: 2px 2px 0px #1c1917;
     --shadow-md: 4px 4px 0px #1c1917;
     --shadow-lg: 6px 6px 0px #1c1917;
@@ -74,7 +63,7 @@
     --code-bg: #1c1917;
 }
 
-/* --- Base Reset & Typography --- */
+/* reset layout */
 * {
     margin: 0;
     padding: 0;
@@ -91,7 +80,6 @@ body {
     transition: background-color 0.2s ease, color 0.2s ease;
 }
 
-/* --- Layout Container --- */
 .app-container {
     display: flex;
     width: 100vw;
@@ -99,7 +87,7 @@ body {
     overflow: hidden;
 }
 
-/* --- Sidebar --- */
+/* menu samping sidebar */
 .sidebar {
     width: 310px;
     background-color: var(--bg-secondary);
@@ -241,7 +229,6 @@ body {
     border-color: var(--text-primary);
 }
 
-/* History Section */
 .history-section {
     flex: 1;
     overflow-y: auto;
@@ -340,7 +327,7 @@ body {
     transform: translateY(-1px);
 }
 
-/* --- Main Content Area --- */
+/* area konten utama */
 .main-content {
     flex: 1;
     display: flex;
@@ -351,7 +338,6 @@ body {
     overflow: hidden;
 }
 
-/* Header */
 .top-header {
     height: 66px;
     padding: 0 24px;
@@ -477,7 +463,6 @@ body {
     color: #ffffff;
 }
 
-/* Active Parameters Bar */
 .active-params-bar {
     padding: 8px 24px;
     background: var(--bg-tertiary);
@@ -503,7 +488,7 @@ body {
     color: var(--accent-primary);
 }
 
-/* --- Chat Container --- */
+/* isi obrolan chat */
 .chat-container {
     flex: 1;
     overflow-y: auto;
@@ -514,7 +499,6 @@ body {
     scroll-behavior: smooth;
 }
 
-/* Welcome View */
 .welcome-view {
     max-width: 780px;
     margin: 30px auto;
@@ -651,7 +635,6 @@ body {
     font-size: 0.8rem;
 }
 
-/* Message List */
 .messages-list {
     display: flex;
     flex-direction: column;
@@ -724,7 +707,6 @@ body {
     box-shadow: var(--shadow-sm);
 }
 
-/* Formatted AI Markdown Text */
 .ai-row .message-bubble p {
     margin-bottom: 12px;
 }
@@ -791,7 +773,7 @@ body {
     color: #ffffff !important;
 }
 
-/* Code Copy Header & High-Contrast Code Blocks */
+/* tampilan kotak kode program */
 .code-wrapper {
     margin: 16px 0;
     border: 2px solid var(--text-primary);
@@ -834,7 +816,6 @@ body {
     color: #ffffff !important;
 }
 
-/* High Specificity Rule for Code Text - Always White */
 .ai-row .message-bubble pre,
 .ai-row .message-bubble pre code,
 .ai-row .message-bubble pre code *,
@@ -860,27 +841,25 @@ body {
     overflow-x: auto !important;
 }
 
-/* Syntax Highlighting High-Contrast Accent Tokens */
 .ai-row .message-bubble pre .hljs-keyword, 
-.ai-row .message-bubble pre .hljs-selector-tag { color: #f472b6 !important; font-weight: 700; } /* Bright Pink */
+.ai-row .message-bubble pre .hljs-selector-tag { color: #f472b6 !important; font-weight: 700; }
 
 .ai-row .message-bubble pre .hljs-string, 
 .ai-row .message-bubble pre .hljs-title, 
 .ai-row .message-bubble pre .hljs-section, 
 .ai-row .message-bubble pre .hljs-attribute, 
-.ai-row .message-bubble pre .hljs-literal { color: #34d399 !important; } /* Bright Mint Green */
+.ai-row .message-bubble pre .hljs-literal { color: #34d399 !important; }
 
 .ai-row .message-bubble pre .hljs-comment, 
 .ai-row .message-bubble pre .hljs-quote, 
-.ai-row .message-bubble pre .hljs-meta { color: #94a3b8 !important; font-style: italic; } /* Muted Slate */
+.ai-row .message-bubble pre .hljs-meta { color: #94a3b8 !important; font-style: italic; }
 
 .ai-row .message-bubble pre .hljs-number, 
-.ai-row .message-bubble pre .hljs-regexp { color: #fbbf24 !important; } /* Bright Gold */
+.ai-row .message-bubble pre .hljs-regexp { color: #fbbf24 !important; }
 
 .ai-row .message-bubble pre .hljs-function, 
-.ai-row .message-bubble pre .hljs-title.function_ { color: #60a5fa !important; font-weight: 700; } /* Bright Blue */
+.ai-row .message-bubble pre .hljs-title.function_ { color: #60a5fa !important; font-weight: 700; }
 
-/* Message Actions Toolbar */
 .message-actions {
     display: flex;
     align-items: center;
@@ -912,7 +891,6 @@ body {
     background: var(--bg-tertiary);
 }
 
-/* Typing Indicator */
 .typing-indicator {
     display: flex;
     align-items: center;
@@ -968,7 +946,6 @@ body {
     color: var(--text-secondary);
 }
 
-/* --- Follow-up Suggestions Container --- */
 .suggestions-container {
     max-width: 900px;
     width: 100%;
@@ -1010,7 +987,7 @@ body {
     transform: translate(-1px, -1px);
 }
 
-/* --- Input Area --- */
+/* form ngetik pesan */
 .chat-input-wrapper {
     padding: 14px 24px 18px 24px;
     background: var(--bg-secondary);
@@ -1112,7 +1089,7 @@ body {
     font-weight: 600;
 }
 
-/* --- Settings Modal --- */
+/* modal popup setting */
 .modal-overlay {
     position: fixed;
     top: 0;
@@ -1256,7 +1233,7 @@ body {
     background: var(--bg-tertiary);
 }
 
-/* --- Toast Notifications --- */
+/* notifikasi toast */
 .toast-container {
     position: fixed;
     bottom: 24px;
@@ -1287,10 +1264,9 @@ body {
     to { opacity: 1; transform: translateX(0); }
 }
 
-/* --- Utility Classes --- */
 .hidden { display: none !important; }
 
-/* --- Responsive Media Queries --- */
+/* tampilan hp / layar kecil */
 @media (max-width: 868px) {
     .sidebar {
         position: fixed;

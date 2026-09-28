@@ -4,34 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>StudyMate AI — Chatbot Edukasi & Asisten Belajar Mahasiswa</title>
-    <meta name="description" content="StudyMate AI adalah chatbot berbasis AI yang dirancang untuk membantu mahasiswa memahami materi perkuliahan dengan bahasa yang sederhana, ramah, dan interaktif.">
+    <meta name="description" content="StudyMate AI adalah chatbot berbasis AI untuk membantu mahasiswa belajar.">
     
-    <!-- Google Fonts -->
+    <!-- font & icon -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Fira+Code:wght@400;500&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
-    
-    <!-- FontAwesome for Icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
-    <!-- Marked.js for Markdown Rendering -->
+    <!-- plugin eksternal markdown math highlight -->
     <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
-    
-    <!-- Highlight.js for Syntax Highlighting -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/atom-one-dark.min.css" id="hljs-theme">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
-
-    <!-- KaTeX for Math Formulas -->
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.css">
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/katex.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/katex@0.16.9/dist/contrib/auto-render.min.js"></script>
 
-    <!-- Custom CSS -->
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
     <div class="app-container">
-        <!-- Sidebar Navigation & Chat Sessions -->
+        <!-- sidebar menu samping -->
         <aside class="sidebar" id="sidebar">
             <div class="sidebar-header">
                 <div class="brand">
@@ -53,7 +46,6 @@
                 <span>Percakapan Baru</span>
             </button>
 
-            <!-- Subject Category Quick Selection -->
             <div class="sidebar-section">
                 <div class="section-title">
                     <i class="fa-solid fa-book-bookmark"></i>
@@ -69,18 +61,14 @@
                 </div>
             </div>
 
-            <!-- Chat History List -->
             <div class="sidebar-section history-section">
                 <div class="section-title">
                     <i class="fa-solid fa-clock-rotate-left"></i>
                     <span>Riwayat Belajar</span>
                 </div>
-                <div class="history-list" id="historyList">
-                    <!-- Dynamic chat history items will be inserted here -->
-                </div>
+                <div class="history-list" id="historyList"></div>
             </div>
 
-            <!-- Sidebar Footer & Controls -->
             <div class="sidebar-footer">
                 <button class="sidebar-action-btn" id="openSettingsBtn">
                     <i class="fa-solid fa-sliders"></i>
@@ -93,9 +81,8 @@
             </div>
         </aside>
 
-        <!-- Main Content Area -->
+        <!-- area utama chat -->
         <main class="main-content">
-            <!-- Top App Header -->
             <header class="top-header">
                 <div class="left-controls">
                     <button class="icon-btn sidebar-toggle-btn" id="toggleSidebarBtn" title="Buka Sidebar">
@@ -125,16 +112,13 @@
                 </div>
             </header>
 
-            <!-- Active Parameter Bar (Chips showing current AI persona) -->
             <div class="active-params-bar" id="activeParamsBar">
                 <div class="param-badge"><i class="fa-solid fa-wand-magic-sparkles"></i> Gaya: <strong id="currentToneLabel">Santai & Sederhana</strong></div>
                 <div class="param-badge"><i class="fa-solid fa-user-astronaut"></i> Peran: <strong id="currentRoleLabel">Asisten Belajar</strong></div>
                 <div class="param-badge"><i class="fa-solid fa-microchip"></i> Engine: <strong id="currentEngineLabel">Smart AI (Direct API)</strong></div>
             </div>
 
-            <!-- Chat Scroll Area -->
             <div class="chat-container" id="chatContainer">
-                <!-- Welcome View (Shown when conversation is empty) -->
                 <div class="welcome-view" id="welcomeView">
                     <div class="welcome-avatar">
                         <i class="fa-solid fa-robot"></i>
@@ -164,16 +148,12 @@
 
                     <div class="sample-prompts-section">
                         <h4><i class="fa-solid fa-fire"></i> Rekomendasi Pertanyaan Sering Diajukan:</h4>
-                        <div class="sample-prompts-grid" id="samplePromptsGrid">
-                            <!-- Populated dynamically via JS -->
-                        </div>
+                        <div class="sample-prompts-grid" id="samplePromptsGrid"></div>
                     </div>
                 </div>
 
-                <!-- Active Chat Messages Stream -->
                 <div class="messages-list" id="messagesList"></div>
 
-                <!-- Typing / Loading Indicator -->
                 <div class="typing-indicator hidden" id="typingIndicator">
                     <div class="ai-avatar-small">
                         <i class="fa-solid fa-robot"></i>
@@ -187,13 +167,11 @@
                 </div>
             </div>
 
-            <!-- Follow-up Prompt Suggestions Chips -->
             <div class="suggestions-container hidden" id="suggestionsContainer">
                 <span class="suggestion-title"><i class="fa-solid fa-wand-magic"></i> Pertanyaan Lanjutan:</span>
                 <div class="suggestion-chips" id="suggestionChips"></div>
             </div>
 
-            <!-- Bottom Chat Input Bar -->
             <div class="chat-input-wrapper">
                 <form class="chat-input-form" id="chatForm">
                     <div class="input-actions-left">
@@ -222,7 +200,7 @@
         </main>
     </div>
 
-    <!-- Parameter & AI Configuration Settings Drawer Modal -->
+    <!-- modal pengaturan ai -->
     <div class="modal-overlay hidden" id="settingsModal">
         <div class="modal-card">
             <div class="modal-header">
@@ -234,7 +212,6 @@
                     Sesuaikan parameter respons AI agar cocok dengan kebutuhan gaya belajar dan mata kuliah kamu.
                 </p>
 
-                <!-- Parameter 1: Gaya Bahasa -->
                 <div class="form-group">
                     <label for="toneSelect"><i class="fa-solid fa-comment-dots"></i> Gaya Bahasa (Tone of Voice)</label>
                     <select id="toneSelect" class="form-select">
@@ -245,7 +222,6 @@
                     </select>
                 </div>
 
-                <!-- Parameter 2: Peran AI -->
                 <div class="form-group">
                     <label for="roleSelect"><i class="fa-solid fa-user-graduate"></i> Peran AI (Persona)</label>
                     <select id="roleSelect" class="form-select">
@@ -256,7 +232,6 @@
                     </select>
                 </div>
 
-                <!-- Parameter 3: Detail Penjelasan -->
                 <div class="form-group">
                     <label for="detailSelect"><i class="fa-solid fa-align-left"></i> Panjang & Kedalaman Response</label>
                     <select id="detailSelect" class="form-select">
@@ -266,13 +241,11 @@
                     </select>
                 </div>
 
-                <!-- Parameter 4: System Prompt Preview / Customizer -->
                 <div class="form-group">
                     <label for="systemPromptText"><i class="fa-solid fa-terminal"></i> Instruksi Sistem Custom (System Prompt)</label>
                     <textarea id="systemPromptText" class="form-textarea" rows="3" placeholder="Instruksi sistem khusus..."></textarea>
                 </div>
 
-                <!-- Parameter 5: API Key & Engine Selection -->
                 <div class="form-group border-top">
                     <label for="apiProviderSelect"><i class="fa-solid fa-key"></i> Provider Model AI</label>
                     <select id="apiProviderSelect" class="form-select">
@@ -295,10 +268,9 @@
         </div>
     </div>
 
-    <!-- Custom Toast Notification -->
     <div class="toast-container" id="toastContainer"></div>
 
-    <!-- Custom JS Scripts -->
+    <!-- file script JS -->
     <script src="js/config.js"></script>
     <script src="js/ai-service.js"></script>
     <script src="js/app.js"></script>
